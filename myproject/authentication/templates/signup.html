@@ -14,7 +14,8 @@
             <p>Please fill in your details to get started</p>
         </div>
         
-        <form>
+        <form method="post" action="{% url 'signup' %}">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" placeholder="Ayushi Anand" required autocomplete="name">
@@ -34,7 +35,7 @@
             <button type="submit" class="signup-button">Create Account</button>
             
             <div class="login-link">
-                Already have an account? <a href="#">Sign in</a>
+                Already have an account? <a href="{% url 'login' %}">Sign in</a>
             </div>
         </form>
     </div>
