@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream - Virtual Event Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/live-streaming.css' %}">
+</head>
+<body>
+    <div class="stream-container">
+        <!-- Main Stream Content -->
+        <div class="stream-main">
+            <!-- Stream Header -->
+            <div class="stream-header">
+                <div class="stream-title">Your Live Stream</div>
+                <div class="stream-info">
+                    <div class="stream-status">
+                        <span class="dot"></span> LIVE
+                    </div>
+                    <div class="stream-timer" id="stream-timer">00:00:00</div>
+                    <div class="stream-viewers">
+                        <i class="fas fa-eye"></i> <span id="viewer-count">0</span> viewers
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Area -->
+            <div class="video-area">
+                <div class="video-container">
+                    <div class="camera-container" id="camera-container">
+                        <video id="webcam-video" class="stream-video" autoplay muted playsinline></video>
+                        <div class="video-placeholder" id="video-placeholder">
+                            <div class="avatar-circle">H</div>
+                            <div class="placeholder-text">Camera is turned off</div>
+                        </div>
+                    </div>
+                    
+                    <div class="screen-share-container" id="screen-container">
+                        <video id="screen-video" class="screen-share-video" autoplay playsinline></video>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stream Controls -->
+            <div class="stream-controls">
+                <div class="control-group">
+                    <button class="control-btn active" id="camera-btn">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <div class="control-label">Camera</div>
+                </div>
+                
+                <div class="control-group">
+                    <button class="control-btn active" id="mic-btn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <div class="control-label">Mic</div>
+                </div>
+                
+                <div class="control-group">
+                    <button class="control-btn" id="screen-btn">
+                        <i class="fas fa-desktop"></i>
+                    </button>
+                    <div class="control-label">Screen</div>
+                </div>
+                
+                <div class="control-group">
+                    <button class="control-btn danger" id="end-btn">
+                        <i class="fas fa-phone-slash"></i>
+                    </button>
+                    <div class="control-label">End</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Sidebar -->
+        <div class="chat-sidebar" id="chat-sidebar">
+            <div class="chat-header">
+                <div class="chat-title">Live Chat</div>
+                <button class="chat-close" id="chat-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-message message-host">
+                    <div class="message-avatar">H</div>
+                    <div class="message-content">
+                        <div class="message-author">
+                            Host <span class="host-badge">HOST</span>
+                            <span class="message-time">Just now</span>
+                        </div>
+                        <div class="message-text">Welcome to the live stream! Feel free to ask questions.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <form class="chat-form" id="chat-form">
+                    <input type="text" class="chat-input" id="chat-input" placeholder="Type a message...">
+                    <button type="submit" class="chat-submit">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Message sent successfully!</div>
+    
+    <script src="{% static 'js/live-streaming.js' %}"></script>
+</body>
+</html>
