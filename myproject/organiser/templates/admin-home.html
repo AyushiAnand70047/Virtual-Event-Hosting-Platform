@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizer Dashboard - Virtual Event Platform</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar-content">
+            <a href="#" class="logo">VirtualEvent</a>
+            <div class="nav-profile">
+                <div class="profile-img">O</div>
+                <span class="profile-name">Organizer</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <h1 class="page-title">Organizer Dashboard</h1>
+            
+            <div class="dashboard-grid">
+                <!-- Live Streaming Section -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Start Live Streaming</h2>
+                        <p class="card-description">Begin a live session immediately to connect with your audience in real-time.</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-group">
+                            <label for="stream-title">Stream Title</label>
+                            <input type="text" id="stream-title" class="form-control" placeholder="Enter your stream title">
+                        </div>
+                        <div class="form-group">
+                            <label for="stream-description">Description (Optional)</label>
+                            <textarea id="stream-description" class="form-control" rows="3" placeholder="Briefly describe what this stream is about"></textarea>
+                        </div>
+                    </div>
+                    <a href="#" class="btn btn-success">Go Live Now</a>
+                </div>
+                
+                <!-- Scheduled Events Section -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Scheduled Events</h2>
+                        <p class="card-description">Plan and manage your upcoming events to better organize your calendar.</p>
+                    </div>
+                    
+                    <div class="card-content">
+                        <a href="#" class="btn" id="add-event-btn">+ Add New Event</a>
+                        
+                        <!-- Sample Event List -->
+                        <div class="events-list">
+                            <div class="event-item">
+                                <div class="event-details">
+                                    <div class="event-title">Webinar: Introduction to Virtual Events</div>
+                                    <div class="event-time">
+                                        <i>📅</i> Mar 5, 2025, 2:00 PM
+                                    </div>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="btn action-btn">Edit</button>
+                                    <button class="btn btn-danger action-btn">Delete</button>
+                                </div>
+                            </div>
+                            
+                            <div class="event-item">
+                                <div class="event-details">
+                                    <div class="event-title">Workshop: Advanced Presentation Skills</div>
+                                    <div class="event-time">
+                                        <i>📅</i> Mar 10, 2025, 10:00 AM
+                                    </div>
+                                </div>
+                                <div class="event-actions">
+                                    <button class="btn action-btn">Edit</button>
+                                    <button class="btn btn-danger action-btn">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
