@@ -1,23 +1,3 @@
-// Sample events data
-let events = [
-    {
-        id: 1,
-        title: "Webinar: Introduction to Virtual Events",
-        date: "2025-03-05",
-        time: "14:00",
-        datetime: "Mar 5, 2025, 2:00 PM",
-        description: "Learn the basics of hosting virtual events"
-    },
-    {
-        id: 2,
-        title: "Workshop: Advanced Presentation Skills",
-        date: "2025-03-10",
-        time: "10:00",
-        datetime: "Mar 10, 2025, 10:00 AM",
-        description: "Master the art of presenting online"
-    }
-];
-
 // DOM Elements
 const addEventBtn = document.getElementById('add-event-btn');
 const addEventModal = document.getElementById('add-event-modal');
@@ -32,6 +12,14 @@ const eventsList = document.getElementById('events-list');
 const toast = document.getElementById('toast');
 const toastMessage = document.getElementById('toast-message');
 
+// Event data will be populated from server
+let events = [];
+
+// Function to get the CSRF token from the page
+function getCsrfToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}
+
 // Event Listeners
 addEventBtn.addEventListener('click', openAddEventModal);
 addModalClose.addEventListener('click', closeAddEventModal);
@@ -43,7 +31,22 @@ updateEventBtn.addEventListener('click', updateEvent);
 
 // Initialize the app
 function init() {
-    renderEvents();
+    // Fetch events from server
+    fetchEvents();
+}
+
+// Fetch events from server
+function fetchEvents() {
+    fetch('/organiser/api/events/')
+        .then(response => response.json())
+        .then(data => {
+            events = data.events;
+            renderEvents();
+        })
+        .catch(error => {
+            console.error('Error fetching events:', error);
+            showToast('Failed to load events', 'error');
+        });
 }
 
 // Render events to the DOM
@@ -55,7 +58,7 @@ function renderEvents() {
         return;
     }
     
-    // Sort events by date
+    // Sort events by date and time
     events.sort((a, b) => new Date(a.date + 'T' + a.time) - new Date(b.date + 'T' + b.time));
     
     events.forEach(event => {
@@ -126,7 +129,7 @@ function closeEditEventModal() {
     editEventModal.classList.remove('active');
 }
 
-// Save New Event
+// Save New Event to server
 function saveEvent() {
     const title = document.getElementById('event-title').value.trim();
     const date = document.getElementById('event-date').value;
@@ -138,40 +141,53 @@ function saveEvent() {
         return;
     }
     
-    // Format the datetime for display
-    const dateObj = new Date(`${date}T${time}`);
-    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    const datetime = dateObj.toLocaleDateString('en-US', options);
-    
-    // Create new event object
-    const newEvent = {
-        id: events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1,
+    // Create event data object
+    const eventData = {
         title,
         date,
         time,
-        datetime,
         description
     };
     
-    // Add to events array
-    events.push(newEvent);
-    
-    // Update UI
-    renderEvents();
-    closeAddEventModal();
-    showToast('Event added successfully!', 'success');
-    
-    // Highlight the new event
-    setTimeout(() => {
-        const newEventElement = document.querySelector(`[data-id="${newEvent.id}"]`);
-        if (newEventElement) {
-            newEventElement.classList.add('new');
-            setTimeout(() => newEventElement.classList.remove('new'), 3000);
+    // Send to server
+    fetch('/organiser/api/events/add/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken()
+        },
+        body: JSON.stringify(eventData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Add new event to local array
+            events.push(data.event);
+            
+            // Update UI
+            renderEvents();
+            closeAddEventModal();
+            showToast(data.message, 'success');
+            
+            // Highlight the new event
+            setTimeout(() => {
+                const newEventElement = document.querySelector(`[data-id="${data.event.id}"]`);
+                if (newEventElement) {
+                    newEventElement.classList.add('new');
+                    setTimeout(() => newEventElement.classList.remove('new'), 3000);
+                }
+            }, 100);
+        } else {
+            showToast(data.message, 'error');
         }
-    }, 100);
+    })
+    .catch(error => {
+        console.error('Error saving event:', error);
+        showToast('Failed to save event', 'error');
+    });
 }
 
-// Update Existing Event
+// Update Existing Event on server
 function updateEvent() {
     const id = document.getElementById('edit-event-id').value;
     const title = document.getElementById('edit-event-title').value.trim();
@@ -184,46 +200,83 @@ function updateEvent() {
         return;
     }
     
-    // Format the datetime for display
-    const dateObj = new Date(`${date}T${time}`);
-    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    const datetime = dateObj.toLocaleDateString('en-US', options);
+    // Create event data object
+    const eventData = {
+        title,
+        date,
+        time,
+        description
+    };
     
-    // Find and update the event
-    const eventIndex = events.findIndex(e => e.id == id);
-    
-    if (eventIndex !== -1) {
-        events[eventIndex] = {
-            ...events[eventIndex],
-            title,
-            date,
-            time,
-            datetime,
-            description
-        };
-        
-        // Update UI
-        renderEvents();
-        closeEditEventModal();
-        showToast('Event updated successfully!', 'success');
-        
-        // Highlight the updated event
-        setTimeout(() => {
-            const updatedEventElement = document.querySelector(`[data-id="${id}"]`);
-            if (updatedEventElement) {
-                updatedEventElement.classList.add('new');
-                setTimeout(() => updatedEventElement.classList.remove('new'), 3000);
+    // Send to server
+    fetch(`/organiser/api/events/update/${id}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken()
+        },
+        body: JSON.stringify(eventData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update event in local array
+            const eventIndex = events.findIndex(e => e.id == id);
+            if (eventIndex !== -1) {
+                events[eventIndex] = data.event;
             }
-        }, 100);
-    }
+            
+            // Update UI
+            renderEvents();
+            closeEditEventModal();
+            showToast(data.message, 'success');
+            
+            // Highlight the updated event
+            setTimeout(() => {
+                const updatedEventElement = document.querySelector(`[data-id="${id}"]`);
+                if (updatedEventElement) {
+                    updatedEventElement.classList.add('new');
+                    setTimeout(() => updatedEventElement.classList.remove('new'), 3000);
+                }
+            }, 100);
+        } else {
+            showToast(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating event:', error);
+        showToast('Failed to update event', 'error');
+    });
 }
 
-// Delete Event
+// Delete Event from server
 function deleteEvent(eventId) {
     if (confirm('Are you sure you want to delete this event?')) {
-        events = events.filter(e => e.id != eventId);
-        renderEvents();
-        showToast('Event deleted successfully!', 'success');
+        // Send to server
+        fetch(`/organiser/api/events/delete/${eventId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken()
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remove event from local array
+                events = events.filter(e => e.id != eventId);
+                
+                // Update UI
+                renderEvents();
+                showToast(data.message, 'success');
+            } else {
+                showToast(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting event:', error);
+            showToast('Failed to delete event', 'error');
+        });
     }
 }
 
@@ -240,4 +293,3 @@ function showToast(message, type = 'success') {
 
 // Initialize the application
 init();
-

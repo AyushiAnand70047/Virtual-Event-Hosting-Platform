@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,62 +9,81 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css\user-home.css' %}">
 </head>
+
 <body>
     <!-- Header -->
     <header class="navbar">
         <div class="container navbar-content">
             <a href="#" class="logo">VirtualEvent</a>
-            
+
             <nav class="nav-links">
                 <a href="#" class="nav-link active">Home</a>
                 <a href="#events" class="nav-link">Events</a>
             </nav>
-            
+
             <div class="nav-profile">
                 <div class="profile-img">U</div>
                 <span class="profile-name">User</span>
             </div>
         </div>
     </header>
-    
+
     <!-- Main Content -->
     <main class="container">
         <!-- Hero Section -->
         <section class="hero">
             <h1 class="hero-title">Welcome to Virtual Event Platform</h1>
-            <p class="hero-subtitle">Join live events, connect with speakers, and participate in interactive sessions from anywhere in the world.</p>
+            <p class="hero-subtitle">Join live events, connect with speakers, and participate in interactive sessions
+                from anywhere in the world.</p>
         </section>
-        
+
         <!-- Live Events Section -->
         <section class="live-event-container">
             <h2 class="section-title">
                 <span class="live-indicator"></span> Live Now
             </h2>
-            
+
             <div id="live-event-content">
                 <!-- Live event will be shown here -->
             </div>
         </section>
-        
+
         <!-- Scheduled Events Section -->
         <section id="events">
             <h2 class="section-title">
                 <i class="fas fa-calendar-alt"></i> Upcoming Events
             </h2>
-            
+
             <div class="tabs">
                 <div class="tab active" data-filter="all">All Events</div>
                 <div class="tab" data-filter="today">Today</div>
                 <div class="tab" data-filter="week">This Week</div>
                 <div class="tab" data-filter="month">This Month</div>
             </div>
-            
+
             <div id="scheduled-events-grid" class="events-grid">
                 <!-- Scheduled events will be shown here -->
+                {% for event in events %}
+                <div class="event-card" data-date="${event.date}">
+                    <h3 class="card-title">{{event.title}}</h3>
+                    <p class="card-description">{{ event.description }}</p>
+                    <div class="card-time">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>{{ event.date }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="no-events" style="grid-column: 1 / -1;">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>No Upcoming Events</h3>
+                    <p>There are no upcoming events scheduled at this time. Please check back later.</p>
+                </div>
+                {% endfor %}
             </div>
         </section>
     </main>
-    
+
     <script src="{% static 'js/user-home.js' %}"></script>
 </body>
+
 </html>
