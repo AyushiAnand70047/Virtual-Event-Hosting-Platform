@@ -28,6 +28,14 @@
             </div>
             
             <button type="submit" class="login-button">Sign In</button>
+
+            <div class="messages" style="text-align: center; color: rgb(248, 72, 72); padding-top: 8px;">
+                {% if messages %}
+                {% for message in messages %}
+                <p {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+            </div>
             
             <div class="signup-link">
                 Don't have an account? <a href="{% url 'signup' %}">Sign up</a>

@@ -182,7 +182,7 @@ function endStream() {
         clearInterval(timerInterval);
         
         // Redirect to dashboard
-        window.location.href = '../home';
+        window.location.href = '../admin-home';
     }
 }
 
