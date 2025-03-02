@@ -56,9 +56,6 @@
 
             <div class="tabs">
                 <div class="tab active" data-filter="all">All Events</div>
-                <div class="tab" data-filter="today">Today</div>
-                <div class="tab" data-filter="week">This Week</div>
-                <div class="tab" data-filter="month">This Month</div>
             </div>
 
             <div id="scheduled-events-grid" class="events-grid">
@@ -69,7 +66,7 @@
                     <p class="card-description">{{ event.description }}</p>
                     <div class="card-time">
                         <i class="fas fa-calendar-alt"></i>
-                        <span>{{ event.date }}</span>
+                        <span>{{ event.date }} at {{ event.time }}</span>
                     </div>
                 </div>
                 {% empty %}
