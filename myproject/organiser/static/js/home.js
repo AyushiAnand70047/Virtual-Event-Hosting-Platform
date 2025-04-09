@@ -71,7 +71,54 @@ function fetchEvents() {
         });
 }
 
-// Render events to the DOM
+document.getElementById('event-image').addEventListener('change', previewImage);
+document.getElementById('edit-event-image').addEventListener('change', previewEditImage);
+
+// Function to preview uploaded image
+function previewImage(e) {
+    const preview = document.getElementById('event-image-preview');
+    preview.innerHTML = '';
+    
+    if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            preview.appendChild(img);
+        }
+        
+        reader.readAsDataURL(e.target.files[0]);
+    } else {
+        preview.innerHTML = '<p>No image selected</p>';
+    }
+}
+
+// Function to preview uploaded image in edit modal
+function previewEditImage(e) {
+    const preview = document.getElementById('edit-event-image-preview');
+    preview.innerHTML = '';
+    
+    if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            preview.appendChild(img);
+        }
+        
+        reader.readAsDataURL(e.target.files[0]);
+    } else {
+        // Keep existing image if available
+        if (preview.querySelector('img')) {
+            return;
+        }
+        preview.innerHTML = '<p>No image selected</p>';
+    }
+}
+
+// Modified renderEvents function to include image
 function renderEvents() {
     eventsList.innerHTML = '';
 
@@ -88,7 +135,15 @@ function renderEvents() {
         eventElement.className = 'event-item';
         eventElement.dataset.id = event.id;
 
+        // Create thumbnail element
+        let thumbnailHtml = `
+            <div class="event-thumbnail">
+                ${event.image_url ? `<img src="${event.image_url}" alt="${event.title}">` : ''}
+            </div>
+        `;
+
         eventElement.innerHTML = `
+            ${thumbnailHtml}
             <div class="event-details">
                 <div class="event-title">${event.title}</div>
                 <div class="event-time">
@@ -113,6 +168,7 @@ function renderEvents() {
         btn.addEventListener('click', (e) => deleteEvent(e.target.dataset.id));
     });
 }
+
 
 // Open Add Event Modal
 function openAddEventModal() {
@@ -140,45 +196,55 @@ function openEditEventModal(eventId) {
         document.getElementById('edit-event-date').value = event.date;
         document.getElementById('edit-event-time').value = event.time;
         document.getElementById('edit-event-description').value = event.description || '';
+        
+        // Set image preview if available
+        const imagePreview = document.getElementById('edit-event-image-preview');
+        if (event.image_url) {
+            imagePreview.innerHTML = `<img src="${event.image_url}" alt="${event.title}">`;
+        } else {
+            imagePreview.innerHTML = '<p>No image selected</p>';
+        }
 
         editEventModal.classList.add('active');
         document.getElementById('edit-event-title').focus();
     }
 }
-
 // Close Edit Event Modal
 function closeEditEventModal() {
     editEventModal.classList.remove('active');
 }
 
-// Save New Event to server
+// Modified saveEvent function to handle image upload
 function saveEvent() {
     const title = document.getElementById('event-title').value.trim();
     const date = document.getElementById('event-date').value;
     const time = document.getElementById('event-time').value;
     const description = document.getElementById('event-description').value.trim();
+    const imageFile = document.getElementById('event-image').files[0];
 
     if (!title || !date || !time) {
         showToast('Please fill in all required fields', 'error');
         return;
     }
 
-    // Create event data object
-    const eventData = {
-        title,
-        date,
-        time,
-        description
-    };
+    // Create FormData for file upload
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('date', date);
+    formData.append('time', time);
+    formData.append('description', description);
+    
+    if (imageFile) {
+        formData.append('image', imageFile);
+    }
 
     // Send to server
     fetch('/organiser/api/events/add/', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
             'X-CSRFToken': getCsrfToken()
         },
-        body: JSON.stringify(eventData)
+        body: formData
     })
         .then(response => response.json())
         .then(data => {
@@ -216,28 +282,31 @@ function updateEvent() {
     const date = document.getElementById('edit-event-date').value;
     const time = document.getElementById('edit-event-time').value;
     const description = document.getElementById('edit-event-description').value.trim();
+    const imageFile = document.getElementById('edit-event-image').files[0];
 
     if (!title || !date || !time) {
         showToast('Please fill in all required fields', 'error');
         return;
     }
 
-    // Create event data object
-    const eventData = {
-        title,
-        date,
-        time,
-        description
-    };
+    // Create FormData for file upload
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('date', date);
+    formData.append('time', time);
+    formData.append('description', description);
+    
+    if (imageFile) {
+        formData.append('image', imageFile);
+    }
 
     // Send to server
     fetch(`/organiser/api/events/update/${id}/`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
             'X-CSRFToken': getCsrfToken()
         },
-        body: JSON.stringify(eventData)
+        body: formData
     })
         .then(response => response.json())
         .then(data => {
@@ -269,6 +338,18 @@ function updateEvent() {
             console.error('Error updating event:', error);
             showToast('Failed to update event', 'error');
         });
+}
+
+// Additional function to clear form when closing the modals
+function closeAddEventModal() {
+    addEventModal.classList.remove('active');
+    // Clear form inputs
+    document.getElementById('event-title').value = '';
+    document.getElementById('event-date').value = '';
+    document.getElementById('event-time').value = '';
+    document.getElementById('event-description').value = '';
+    document.getElementById('event-image').value = '';
+    document.getElementById('event-image-preview').innerHTML = '<p>No image selected</p>';
 }
 
 // Delete Event from server

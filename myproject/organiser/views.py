@@ -1,3 +1,20 @@
+# Update your models.py first to include image field
+"""
+from django.db import models
+
+class Event(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    date = models.DateField()
+    time = models.TimeField()
+    image = models.ImageField(upload_to='event_images/', blank=True, null=True)
+    
+    @property
+    def datetime(self):
+        return f"{self.date.strftime('%B %d, %Y')} at {self.time.strftime('%I:%M %p')}"
+"""
+
+# Updated views.py
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -19,14 +36,16 @@ def get_events(request):
     
     event_list = []
     for event in events:
-        event_list.append({
+        event_dict = {
             'id': event.id,
             'title': event.title,
             'description': event.description or '',
             'date': event.date.strftime('%Y-%m-%d'),
             'time': event.time.strftime('%H:%M'),
-            'datetime': event.datetime
-        })
+            'datetime': event.datetime,
+            'image_url': event.image.url if event.image else None
+        }
+        event_list.append(event_dict)
     
     return JsonResponse({'events': event_list})
 
@@ -35,13 +54,12 @@ def add_event(request):
     """API to add a new event"""
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            
             # Extract data from request
-            title = data.get('title')
-            description = data.get('description', '')
-            date_str = data.get('date')
-            time_str = data.get('time')
+            title = request.POST.get('title')
+            description = request.POST.get('description', '')
+            date_str = request.POST.get('date')
+            time_str = request.POST.get('time')
+            image = request.FILES.get('image')
             
             # Validate required fields
             if not title or not date_str or not time_str:
@@ -59,20 +77,25 @@ def add_event(request):
                 title=title,
                 description=description,
                 date=date_obj,
-                time=time_obj
+                time=time_obj,
+                image=image  # This will be None if no image was uploaded
             )
+            
+            # Prepare response
+            event_dict = {
+                'id': event.id,
+                'title': event.title,
+                'description': event.description or '',
+                'date': event.date.strftime('%Y-%m-%d'),
+                'time': event.time.strftime('%H:%M'),
+                'datetime': event.datetime,
+                'image_url': event.image.url if event.image else None
+            }
             
             return JsonResponse({
                 'success': True,
                 'message': 'Event added successfully!',
-                'event': {
-                    'id': event.id,
-                    'title': event.title,
-                    'description': event.description or '',
-                    'date': event.date.strftime('%Y-%m-%d'),
-                    'time': event.time.strftime('%H:%M'),
-                    'datetime': event.datetime
-                }
+                'event': event_dict
             })
             
         except Exception as e:
@@ -94,14 +117,12 @@ def update_event(request, event_id):
             # Get the event or return 404
             event = get_object_or_404(Event, id=event_id)
             
-            # Parse JSON data
-            data = json.loads(request.body)
-            
             # Extract data from request
-            title = data.get('title')
-            description = data.get('description', '')
-            date_str = data.get('date')
-            time_str = data.get('time')
+            title = request.POST.get('title')
+            description = request.POST.get('description', '')
+            date_str = request.POST.get('date')
+            time_str = request.POST.get('time')
+            image = request.FILES.get('image')
             
             # Validate required fields
             if not title or not date_str or not time_str:
@@ -119,19 +140,28 @@ def update_event(request, event_id):
             event.description = description
             event.date = date_obj
             event.time = time_obj
+            
+            # Only update image if a new one was provided
+            if image:
+                event.image = image
+                
             event.save()
+            
+            # Prepare response
+            event_dict = {
+                'id': event.id,
+                'title': event.title,
+                'description': event.description or '',
+                'date': event.date.strftime('%Y-%m-%d'),
+                'time': event.time.strftime('%H:%M'),
+                'datetime': event.datetime,
+                'image_url': event.image.url if event.image else None
+            }
             
             return JsonResponse({
                 'success': True,
                 'message': 'Event updated successfully!',
-                'event': {
-                    'id': event.id,
-                    'title': event.title,
-                    'description': event.description or '',
-                    'date': event.date.strftime('%Y-%m-%d'),
-                    'time': event.time.strftime('%H:%M'),
-                    'datetime': event.datetime
-                }
+                'event': event_dict
             })
             
         except Exception as e:
@@ -144,7 +174,7 @@ def update_event(request, event_id):
         'success': False, 
         'message': 'Invalid request method'
     })
-
+    
 @csrf_exempt
 def delete_event(request, event_id):
     """API to delete an event"""

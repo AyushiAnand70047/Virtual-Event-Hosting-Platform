@@ -253,6 +253,13 @@ input:checked + .slider:before {
     transition: background-color 0.3s;
 }
 
+.page-title {
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-size: 28px;
+    color: var(--text-color);
+}
+
 .event-details {
     flex: 1;
 }
@@ -336,10 +343,22 @@ input:checked + .slider:before {
     border-radius: 10px;
     width: 90%;
     max-width: 500px;
+    max-height: 90vh;
+    overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     transform: translateY(-20px);
     transition: transform 0.3s ease, background-color 0.3s;
 }
+
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 4px;
+}
+
 
 .modal-header {
     padding: 20px;
@@ -355,6 +374,10 @@ input:checked + .slider:before {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    background-color: var(--modal-bg, white); /* Ensures background in scroll */
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
 }
 
 .modal-overlay.active .modal {
@@ -377,6 +400,71 @@ input:checked + .slider:before {
 
 .modal-body {
     padding: 20px;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+/* Image Upload Styling */
+.image-upload-container {
+    margin-top: 8px;
+}
+
+.image-preview {
+    margin-top: 10px;
+    width: 100%;
+    min-height: 120px;
+    border: 1px dashed var(--border-color, #ddd);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--card-bg, #f8f9fa);
+    transition: background-color 0.3s;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.image-preview p {
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+/* Dark mode specific styles for file input */
+[data-theme="dark"] input[type="file"]::file-selector-button {
+    background-color: #333;
+    color: var(--light-color);
+    border: 1px solid #555;
+}
+
+[data-theme="dark"] input[type="file"]:hover::file-selector-button {
+    background-color: #444;
+}
+
+/* Make sure event items with images display properly */
+.event-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 15px;
+    align-items: center;
+}
+
+.event-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: var(--card-bg, #f8f9fa);
+}
+
+.event-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Animation for adding/removing events */

@@ -62,6 +62,12 @@
                 <!-- Scheduled events will be shown here -->
                 {% for event in events %}
                 <div class="event-card" data-date="${event.date}">
+                    {% if event.image %}
+                    <img class="card-image" src="{{ event.image.url }}" alt="{{ event.title }}">
+                    {% else %}
+                    <img class="card-image" src="{% static 'images/default-placeholder.png' %}"
+                        alt="No image available">
+                    {% endif %}
                     <h3 class="card-title">{{event.title}}</h3>
                     <p class="card-description">{{ event.description }}</p>
                     <div class="card-time">

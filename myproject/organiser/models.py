@@ -3,6 +3,7 @@ from datetime import datetime
 
 class Event(models.Model):
     title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='event_images/', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     date = models.DateField()
     time = models.TimeField()
