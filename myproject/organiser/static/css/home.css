@@ -1,12 +1,3 @@
-:root {
-    --primary-color: #4A6FFF;
-    --secondary-color: #6C757D;
-    --success-color: #28A745;
-    --danger-color: #DC3545;
-    --light-color: #F8F9FA;
-    --dark-color: #343A40;
-    --box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-}
 
 * {
     margin: 0;
@@ -15,21 +6,51 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-    background-color: #f5f7fb;
-    color: #333;
+:root {
+    --primary-color: #4A6FFF;
+    --secondary-color: #6C757D;
+    --success-color: #28A745;
+    --danger-color: #DC3545;
+    --light-color: #F8F9FA;
+    --dark-color: #343A40;
+    --box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    
+    /* Theme colors */
+    --bg-color: white;
+    --text-color: var(--dark-color);
+    --navbar-bg: white;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: var(--light-color);
+    --navbar-bg: #1e1e1e;
+    /* Add these new dark mode variables */
+    --card-bg: #1e1e1e;
+    --event-item-bg: #2d2d2d;
+    --border-color: #444;
+    --modal-bg: #1e1e1e;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s;
 }
 
 .navbar {
-    background-color: white;
+    background-color: var(--navbar-bg);
     box-shadow: var(--box-shadow);
     padding: 15px 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .navbar-content {
@@ -39,28 +60,88 @@ body {
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: bold;
     text-decoration: none;
+    color: var(--primary-color);
 }
 
 .nav-profile {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 .profile-img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #ddd;
+    background-color: var(--primary-color);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    color: var(--dark-color);
+}
+
+/* Toggle switch styling */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 24px;
+    position: relative;
+    width: 48px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    background-color: white;
+    bottom: 4px;
+    content: "";
+    height: 16px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 16px;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Icons for light/dark */
+.slider-icons {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 7px;
+    align-items: center;
+    height: 100%;
+    color: white;
+    font-size: 12px;
 }
 
 .profile-name {
@@ -91,11 +172,11 @@ body {
 }
 
 .dashboard-card {
-    background-color: white;
+    background-color: var(--card-bg, white);
     border-radius: 10px;
     padding: 30px;
     box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s;
     height: 100%;
 }
 
@@ -110,7 +191,7 @@ body {
 .card-title {
     font-size: 20px;
     font-weight: 600;
-    color: var(--dark-color);
+    color: var(--text-color);
     margin-bottom: 10px;
 }
 
@@ -164,11 +245,12 @@ body {
 .event-item {
     padding: 15px;
     border-radius: 5px;
-    background-color: #f8f9fa;
+    background-color: var(--event-item-bg, #f8f9fa);
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s;
 }
 
 .event-details {
@@ -214,9 +296,12 @@ body {
 .form-control {
     width: 100%;
     padding: 10px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color, #ddd);
     border-radius: 5px;
     font-size: 16px;
+    background-color: var(--card-bg, white);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .form-control:focus {
@@ -247,26 +332,35 @@ body {
 }
 
 .modal {
-    background-color: white;
+    background-color: var(--modal-bg, white);
     border-radius: 10px;
     width: 90%;
     max-width: 500px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     transform: translateY(-20px);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s;
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color, #eee);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-footer {
+    padding: 20px;
+    border-top: 1px solid var(--border-color, #eee);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
 .modal-overlay.active .modal {
     transform: translateY(0);
 }
 
-.modal-header {
-    padding: 20px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
 .modal-title {
     font-size: 20px;
@@ -283,14 +377,6 @@ body {
 
 .modal-body {
     padding: 20px;
-}
-
-.modal-footer {
-    padding: 20px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
 }
 
 /* Animation for adding/removing events */
