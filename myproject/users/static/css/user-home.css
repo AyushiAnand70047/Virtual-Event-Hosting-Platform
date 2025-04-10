@@ -20,6 +20,78 @@ body {
     color: #333;
 }
 
+/* Dark mode overrides */
+body.dark-mode {
+    --primary-color: #4A6FFF;
+    --secondary-color: #bbbbbb;
+    --success-color: #28A745;
+    --danger-color: #FF4B4B;
+    --light-color: #1e1e1e;
+    --dark-color: #ffffff;
+    --box-shadow: rgba(255, 255, 255, 0.05) 0px 4px 12px;
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .navbar,
+body.dark-mode .hero,
+body.dark-mode .live-event,
+body.dark-mode .no-events,
+body.dark-mode .event-card {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+body.dark-mode .nav-link,
+body.dark-mode .logo,
+body.dark-mode .profile-name,
+body.dark-mode .event-title,
+body.dark-mode .hero-title,
+body.dark-mode .section-title,
+body.dark-mode .card-title,
+body.dark-mode .no-events h3 {
+    color: #ffffff;
+}
+
+body.dark-mode .hero-subtitle,
+body.dark-mode .event-description,
+body.dark-mode .host-name,
+body.dark-mode .meta-item,
+body.dark-mode .card-description,
+body.dark-mode .card-time,
+body.dark-mode .no-events p {
+    color: #bbbbbb;
+}
+
+body.dark-mode .join-btn {
+    background-color: #4A6FFF;
+    color: #ffffff;
+}
+
+body.dark-mode .join-btn:hover {
+    background-color: #3a5ce4;
+}
+
+body.dark-mode .profile-img {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+body.dark-mode .tab {
+    color: #bbbbbb;
+    border-color: transparent;
+}
+
+body.dark-mode .tab.active {
+    color: #4A6FFF;
+    border-bottom-color: #4A6FFF;
+}
+
+body.dark-mode .tabs {
+    border-bottom: 1px solid #333;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -84,6 +156,76 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+/* Dark mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Theme switch styles */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: background-color 0.3s;
+    border-radius: 34px;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: transform 0.3s;
+    border-radius: 50%;
+}
+
+/* Slide the toggle when checked */
+.theme-switch input:checked + .slider::before {
+    transform: translateX(30px);
+}
+
+/* Optional: change background on checked */
+.theme-switch input:checked + .slider {
+    background-color: #4A6FFF;
+}
+
+.slider-icons {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 8px;
+    position: absolute;
+    width: 100%;
+    top: 2px;
+    font-size: 14px;
 }
 
 .profile-img {

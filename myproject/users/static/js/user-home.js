@@ -1,6 +1,6 @@
 // Sample data
 const liveEvent = null; // Set to null to show "No live events" message
-        
+
 // Uncomment this to show a live event
 /*
 const liveEvent = {
@@ -14,10 +14,28 @@ const liveEvent = {
 };
 */
 
+const checkbox = document.getElementById('checkbox');
+
+// Load theme from localStorage if available
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    checkbox.checked = true;
+}
+
+checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light');
+    }
+});
+
 // Display live event or "no events" message
 function renderLiveEvent() {
     const liveEventContent = document.getElementById('live-event-content');
-    
+
     if (liveEvent) {
         liveEventContent.innerHTML = `
             <div class="live-event">
@@ -59,7 +77,7 @@ function renderLiveEvent() {
 }
 
 // Initialize the page
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     renderLiveEvent();
     // renderScheduledEvents(scheduledEvents);
 });
