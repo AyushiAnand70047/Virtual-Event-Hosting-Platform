@@ -21,7 +21,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from datetime import datetime
 from .models import Event
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def home(request):
     return render(request, 'admin-home.html')
 
