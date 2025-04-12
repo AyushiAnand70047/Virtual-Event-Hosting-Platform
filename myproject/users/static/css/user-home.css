@@ -121,6 +121,26 @@ body.dark-mode .tabs {
     text-decoration: none;
 }
 
+.logout-btn {
+    margin-left: 15px;
+    padding: 6px 12px;
+    background-color: #f44336;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+}
+
 .nav-links {
     display: flex;
     gap: 20px;

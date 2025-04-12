@@ -1,19 +1,3 @@
-# Update your models.py first to include image field
-"""
-from django.db import models
-
-class Event(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True, null=True)
-    date = models.DateField()
-    time = models.TimeField()
-    image = models.ImageField(upload_to='event_images/', blank=True, null=True)
-    
-    @property
-    def datetime(self):
-        return f"{self.date.strftime('%B %d, %Y')} at {self.time.strftime('%I:%M %p')}"
-"""
-
 # Updated views.py
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse

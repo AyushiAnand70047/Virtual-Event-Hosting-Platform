@@ -42,7 +42,7 @@ def login(request):
         email = request.POST['email']
         password = request.POST['password']
         
-        if email == "ayushianand088@gmail.com" and password == "ayushi@088":
+        if email == "ayushianand088@gmail.com" and password == "1234":
             return redirect('admin-home')
         
         # Find the user by email
