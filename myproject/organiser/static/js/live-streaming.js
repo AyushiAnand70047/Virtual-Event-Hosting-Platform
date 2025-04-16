@@ -255,10 +255,10 @@ function simulateViewers() {
         // Simulate a new viewer chat message occasionally
         if (Math.random() > 0.7) {
             const viewers = [
-                { name: 'John', messages: ['Great stream!', 'How do I sign up for the next event?', 'Thanks for the info!'] },
-                { name: 'Sarah', messages: ['This is so helpful', 'Can you go over that again?', 'Looking forward to the next one!'] },
-                { name: 'Alex', messages: ['First time here!', 'Love the content', 'Will this be recorded?'] },
-                { name: 'Priya', messages: ['Hello from India!', 'This is exactly what I needed', 'When is the next stream?'] }
+                { name: 'Grace', messages: ['Great stream!'] },
+                { name: 'Mahak', messages: ['This is so helpful'] },
+                { name: 'Rythm', messages: ['First time here!', 'Love the content'] },
+                { name: 'Mounika', messages: ['This is exactly what I needed'] }
             ];
             
             const viewer = viewers[Math.floor(Math.random() * viewers.length)];
